@@ -1,4 +1,6 @@
+docs/
 .Rproj.user
 .Rhistory
 .RData
 *.xls
+docs

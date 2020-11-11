@@ -1,22 +1,25 @@
 # Number of applicants -------------------------
 
 library(dplyr, warn.conflicts = FALSE)
-library(XML)
-library(reshape2)
+library(rvest)
+library(tidyr)
+library(readr)
+library(usethis)
 
-ssa <- readHTMLTable("http://www.ssa.gov/oact/babynames/numberUSbirths.html")[[2]]
+page <- read_html("https://www.ssa.gov/oact/babynames/numberUSbirths.html")
+
+ssa <- page %>% html_nodes("table") %>% .[[2]] %>% html_table() %>% tbl_df()
 names(ssa) <- c("year", "M", "F", "total")
 ssa$total <- NULL
-ssa <- ssa[-1, ]
 
-ssa$year <- as.integer(as.character(ssa$year))
-ssa$M <- as.integer(gsub(",", "", ssa$M))
-ssa$F <- as.integer(gsub(",", "", ssa$F))
+ssa$M <- parse_number(ssa$M)
+ssa$F <- parse_number(ssa$F)
 
-applicants <- ssa %>% 
-  melt(id = "year") %>%
-  select(year, sex = variable, n_all = value) %>%
-  mutate(sex = as.character(sex)) %>%
+applicants <- ssa %>%
+  gather(sex, n_all, M:F) %>%
+  arrange(year, sex) %>%
+  mutate(n_all = as.integer(n_all)) %>%
   arrange(year, sex)
 
-save(applicants, file = "data/applicants.rdata")
+write_csv(applicants, "data-raw/applicants.csv")
+usethis::use_data(applicants, overwrite = TRUE)

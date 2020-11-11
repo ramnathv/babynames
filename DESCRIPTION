@@ -1,10 +1,20 @@
 Package: babynames
-Title: US baby names 1880-2013
-Version: 0.1
-Authors@R: 'Hadley Wickham <h.wickham@gmail.com> [aut,cre]'
+Title: US Baby Names 1880-2017
+Version: 1.0.0.9000
+Authors@R: c(
+    person("Hadley", "Wickham", , "hadley@rstudio.com", c("aut", "cre")),
+    person("RStudio", role = "cph")
+    )
 Description: US baby names provided by the SSA. This package contains all
     names used for at least 5 children of either sex.
 Depends:
-    R (>= 3.1.0)
+    R (>= 2.10)
+Imports:
+    tibble
 License: CC0
 LazyData: true
+URL: http://github.com/hadley/babynames
+BugReports: https://github.com/hadley/babynames/issues
+RoxygenNote: 6.1.1
+Suggests: 
+    testthat (>= 2.0.0)
